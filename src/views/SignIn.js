@@ -12,7 +12,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
 import axios from "axios";
 
 function Copyright() {
@@ -65,13 +64,14 @@ export default function SignIn({ history }) {
   };
 
   const singIn = async (event) => {
-    window.ee = event;
     event.preventDefault();
     try {
       const data = { username: username, password: password };
-      await axios.post("/api/signin", data);
+      const response = await axios.post("/api/signin", data);
+      console.log("response", response);
       history.push("/");
     } catch (error) {
+      console.log("error", error);
       alert("아이디 또는 비밀번호가 일치하지 않습니다.");
     }
   };
