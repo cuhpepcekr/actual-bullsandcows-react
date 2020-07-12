@@ -69,6 +69,8 @@ export default function SignIn({ history }) {
       const data = { username: username, password: password };
       const response = await axios.post("/api/signin", data);
       console.log("response", response);
+      const token = response.data;
+      axios.defaults.headers.common["X-AUTH-TOKEN"] = token;
       history.push("/");
     } catch (error) {
       console.log("error", error);
