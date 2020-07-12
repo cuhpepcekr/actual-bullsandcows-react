@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -46,8 +48,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn({ history }) {
   const classes = useStyles();
+
+  const [inputs, setInputs] = useState({
+    username: "",
+    password: "",
+  });
+  const { username, password } = inputs;
+  const onChange = (event) => {
+    const { value, name } = event.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  };
+
+  const singIn = async (event) => {
+    window.ee = event;
+    event.preventDefault();
+    try {
+      const data = { username: username, password: password };
+      await axios.post("/api/signin", data);
+      history.push("/");
+    } catch (error) {
+      alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -65,11 +92,12 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="ID"
+            name="username"
+            autoComplete="username"
             autoFocus
+            onChange={onChange}
           />
           <TextField
             variant="outlined"
@@ -81,6 +109,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={onChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -92,6 +121,7 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={singIn}
           >
             Sign In
           </Button>
